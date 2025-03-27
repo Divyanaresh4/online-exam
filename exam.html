@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;"> <!-- Disables right-click -->
+
+    <div class="container">
+        <h2>Online Exam</h2>
+        <form id="examForm">
+            <p>1. What is 2 + 2?</p>
+            <input type="radio" name="q1" value="3"> 3<br>
+            <input type="radio" name="q1" value="4"> 4<br>
+            <input type="radio" name="q1" value="5"> 5<br>
+
+            <p>2. What is the capital of France?</p>
+            <input type="radio" name="q2" value="London"> London<br>
+            <input type="radio" name="q2" value="Paris"> Paris<br>
+            <input type="radio" name="q2" value="Rome"> Rome<br>
+
+            <p>3. Which is the largest planet?</p>
+            <input type="radio" name="q3" value="Earth"> Earth<br>
+            <input type="radio" name="q3" value="Jupiter"> Jupiter<br>
+            <input type="radio" name="q3" value="Mars"> Mars<br>
+
+            <br>
+            <button type="button" onclick="submitExam()">Submit Exam</button>
+        </form>
+
+        <div id="result" class="hidden">
+            <h3>Exam Result</h3>
+            <p id="score"></p>
+        </div>
+    </div>
+
+    <script>
+        let examSubmitted = false;
+
+        // Correct answers
+        const correctAnswers = {
+            q1: "4",
+            q2: "Paris",
+            q3: "Jupiter"
+        };
+
+        function calculateScore() {
+            let score = 0;
+            const form = document.getElementById("examForm");
+            for (let question in correctAnswers) {
+                const selected = form.elements[question].value;
+                if (selected === correctAnswers[question]) {
+                    score++;
+                }
+            }
+            return score;
+        }
+
+        function submitExam() {
+            if (examSubmitted) return;
+            examSubmitted = true;
+
+            let score = calculateScore();
+            document.getElementById("examForm").classList.add("hidden");
+            document.getElementById("result").classList.remove("hidden");
+            document.getElementById("score").innerText = `Your Score: ${score} / 3`;
+            alert("Exam submitted automatically!");
+        }
+
+        // Detecting tab switching and window focus loss
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                submitExam();
+            }
+        });
+
+        // Detect screen minimize
+        window.addEventListener("blur", function() {
+            submitExam();
+        });
+    </script>
+</body>
+</html>
